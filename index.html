@@ -1,0 +1,51 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+		<script src="dust-full-1.1.1.js"></script>
+		<script src="dust.dom.js"></script>
+	</head>
+	<body>
+		Template:
+		<script id="myTemplate" type='text/x-handlebars'>
+An example template. {title}
+{@demo  /}
+<span {@clickme /}>Click me!</span>
+		</script>
+
+		<div id="output"></div>
+		<script>
+			dust.helpers = dust.helpers || {};
+			dust.helpers.demo = function(chunk){
+				console.log(arguments);
+				return chunk.write(dust.createElement('div', function (el) {
+					$(el).css('background', '#0d0');
+					$(el).text('a demo');
+				}));
+			}
+			dust.helpers.clickme = function (chunk) {
+				return chunk.write(
+					dust.domHook(function (el) {
+						$(el).click(function () {
+							$(this).text('Clicked');
+							$(el).css('color', '#0d0');
+						});
+					})
+				);
+			};
+			var compiled = dust.compile($('#myTemplate').html(), 'myTpl');
+			dust.loadSource(compiled);
+			dust.renderDom('myTpl', {title: 'Hi'}, function (err, nodes) {
+				console.log(nodes);
+				 $('#output').append(nodes);
+			});
+			// $('#output').html(template({title: 'Hi'}));
+		</script>
+	</body>
+</html>
