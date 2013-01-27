@@ -26,7 +26,11 @@
 	 * @returns {string} Example: '<div data-dust-dom="hook123"></div>'
 	 */
 	dust.createElement = function(tagName, callback) {
-		return '<' + tagName + ' ' + dust.domHook(callback) + '></' + tagName +'>';
+		var html = '<' + tagName + ' ' + dust.domHook(callback);
+		if (tagName === 'img' || tagName === 'input' || tagName === 'br' || tagName === 'hr') {
+			return html + '/>';
+		}
+		return html + '></' + tagName +'>';
 	};
 
 	/**
@@ -46,10 +50,9 @@
 			var container = document.createElement('div');
 			container.innerHTML = html;
 			// Process created callbacks
-			var elements = container.querySelectorAll('[' + dust.domHook.attribute + ']');
+			var elements = container.querySelectorAll('[' + dust.domHook.attribute + ']'); // @todo implement a jQuery fallback for IE7
 			for (var i = 0; i < elements.length; i++) {
 				var element = elements[i];
-				console.dir(element);
 				var hook = element.getAttribute(dust.domHook.attribute);
 				element.removeAttribute(dust.domHook.attribute);
 				dust.domHook.callbacks[hook](element);
