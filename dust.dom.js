@@ -47,7 +47,7 @@
 				return callback(err, html);
 			}
 			// Convert html to DOM elements
-			var container = document.createElement('div');
+			var container = document.createElement(dust.renderDom.element);
 			container.innerHTML = html;
 			// Process created callbacks
 			var elements = container.querySelectorAll('[' + dust.domHook.attribute + ']'); // @todo implement a jQuery fallback for IE7
@@ -60,5 +60,18 @@
 			}
 			callback(err, container.childNodes);
 		});
+	};
+	dust.renderDom.element = 'div';
+
+	/**
+	 * Change element for rendering of DOM to prevent innerHTML conflicts
+	 *
+	 * @param {string} tagName
+	 * @return string
+	 */
+	dust.renderDom.setElement = function(tagName) {
+		var old = dust.renderDom.element;
+		dust.renderDom.element = tagName;
+		return old;
 	};
 })(dust);
